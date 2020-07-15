@@ -69,7 +69,9 @@ Class ServerProfile
         IStaminaBar.IsChecked = profile.StaminaBar
         ICameraShake.IsChecked = profile.CameraShake
         IVisualAids.IsChecked = profile.VisualAids
-        IExtendedMapContent.IsChecked = profile.ExtendedMapContent
+        IMapContentFriendly.IsChecked = profile.MapContentFriendly
+        IMapContentEnemy.IsChecked = profile.MapContentEnemy
+        IMapContentMines.IsChecked = profile.MapContentMines
         ICommands.Text = profile.Commands
         IVonId.IsChecked = profile.VonId
         IKilledBy.IsChecked = profile.KilledBy
@@ -844,7 +846,9 @@ Class ServerProfile
             vbTab & vbTab & vbTab & "scoreTable = " & IScoreTable.IsChecked & ";",
             vbTab & vbTab & vbTab & "deathMessages = " & IKilledBy.IsChecked & ";",
             vbTab & vbTab & vbTab & "vonID = " & IVonId.IsChecked & ";",
-            vbTab & vbTab & vbTab & "mapContent = " & IExtendedMapContent.IsChecked & ";",
+            vbTab & vbTab & vbTab & "mapContentFriendly	 = " & IMapContentFriendly.IsChecked & ";",
+            vbTab & vbTab & vbTab & "mapContentEnemy = " & IMapContentEnemy.IsChecked & ";",
+            vbTab & vbTab & vbTab & "mapContentMines = " & IMapContentMines.IsChecked & ";",
             vbTab & vbTab & vbTab & "autoReport = " & IAutoReporting.IsChecked & ";",
             vbTab & vbTab & vbTab & "multipleSaves = " & IMultipleSaves.IsChecked & ";",
             vbTab & vbTab & "};",
@@ -954,7 +958,9 @@ Class ServerProfile
         profile.StaminaBar = IStaminaBar.IsChecked
         profile.CameraShake = ICameraShake.IsChecked
         profile.VisualAids = IVisualAids.IsChecked
-        profile.ExtendedMapContent = IExtendedMapContent.IsChecked
+        profile.IMapContentFriendly = IMapContentFriendly.IsChecked
+        profile.IMapContentEnemy = IMapContentEnemy.IsChecked
+        profile.IMapContentMines = IMapContentMines.IsChecked
         profile.Commands = ICommands.Text
         profile.VonId = IVonId.IsChecked
         profile.KilledBy = IKilledBy.IsChecked
