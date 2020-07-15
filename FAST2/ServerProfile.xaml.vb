@@ -2,6 +2,7 @@
 Imports System.Threading
 Imports System.Windows.Forms
 Imports FAST2.Models
+Imports Xceed.Wpf.Toolkit.Primitives
 
 Class ServerProfile
     Private ReadOnly _safeName As String
@@ -9,6 +10,7 @@ Class ServerProfile
 
     Private Sub ServerProfile_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         UpdateProfile()
+        UpdateProfileModCounts()
     End Sub
 
     Public Sub New(profile As Models.ServerProfile)
@@ -30,7 +32,7 @@ Class ServerProfile
         ILocalClients.Text = profile.LocalClients
         INoOfHeadlessClients.Value = profile.NoOfHeadlessClients
         ILoopback.IsChecked = profile.Loopback
-        IUpnp.IsChecked = profile.Upnp
+        IUPNP.IsChecked = profile.Upnp
         INetlog.IsChecked = profile.Netlog
         'IAutoRestartEnabled.IsChecked = profile.AutoRestartEnabled
         'IDailyRestartAEnabled.IsChecked = profile.DailyRestartAEnabled
@@ -282,10 +284,12 @@ Class ServerProfile
                     IHcIpGroup.IsEnabled = True
                     IHcSliderGroup.IsEnabled = True
                     IHeadlessClientEnabled.ToolTip = "Disable HC"
+                    ILaunchHeadless.IsEnabled = True
                 Else
                     IHcIpGroup.IsEnabled = False
                     IHcSliderGroup.IsEnabled = False
                     IHeadlessClientEnabled.ToolTip = "Enable HC"
+                    ILaunchHeadless.IsEnabled = False
                 End If
             Case "IVonEnabled"
                 If IVonEnabled.IsChecked Then
@@ -400,7 +404,7 @@ Class ServerProfile
     End Sub
 
     Private Sub ModsPaste_Click(sender As Controls.Button, e As RoutedEventArgs) Handles IClientModsPaste.Click, IServerModsPaste.Click, IHeadlessModsPaste.Click
-        If ModsToCopy IsNot String.Empty
+        If ModsToCopy IsNot String.Empty Then
             Select Case sender.Name
                 Case "IServerModsPaste"
                     IServerModsList.SelectedValue = ModsToCopy
@@ -608,25 +612,35 @@ Class ServerProfile
 
             If IHeadlessClientEnabled.IsChecked Then
                 For hc = 1 To INoOfHeadlessClients.Value
-                    Dim hcCommandLine As String = "-client -connect=127.0.0.1 -password=" & IPassword.Text & " -profiles=" & profilePath & " -nosound -port=" & IPort.Text
-                    Dim hcMods As String = Nothing
-
-                    For Each addon In IHeadlessModsList.SelectedItems
-                        hcMods = hcMods & addon & ";"
-                    Next
-
-                    hcCommandLine = hcCommandLine & " ""-mod=" & hcMods & """"
-
-                    Clipboard.SetText(hcCommandLine)
-
-                    Dim hcStartInfo As New ProcessStartInfo(IExecutable.Text, hcCommandLine)
-                    Dim hcProcess As New Process With {
-                            .StartInfo = hcStartInfo
-                        }
-                    hcProcess.Start()
+                    LaunchHeadlessClient(profilePath)
                 Next
             End If
         End If
+    End Sub
+
+    Private Sub ILaunchHeadless_Click(sender As Object, e As RoutedEventArgs) Handles ILaunchHeadless.Click
+        Dim profileName As String = Functions.SafeName(IDisplayName.Content)
+        Dim profilePath As String = _profilesPath & profileName & "\"
+        LaunchHeadlessClient(profilePath)
+    End Sub
+
+    Private Sub LaunchHeadlessClient(profilePath As String)
+        Dim hcCommandLine As String = "-client -connect=127.0.0.1 -password=" & IPassword.Text & " -profiles=" & profilePath & $" -nosound -port=" & IPort.Text
+        Dim hcMods As String = Nothing
+
+        For Each addon In IHeadlessModsList.SelectedItems
+            hcMods = hcMods & addon & ";"
+        Next
+
+        hcCommandLine = hcCommandLine & " ""-mod=" & hcMods & """"
+
+        Clipboard.SetText(hcCommandLine)
+
+        Dim hcStartInfo As New ProcessStartInfo(IExecutable.Text, hcCommandLine)
+        Dim hcProcess As New Process With {
+                .StartInfo = hcStartInfo
+            }
+        hcProcess.Start()
     End Sub
 
     Private Sub WriteConfigFiles(profile As String)
@@ -648,7 +662,7 @@ Class ServerProfile
             "hostname = """ & IServerName.Text & """;",
             "maxPlayers = " & IMaxPlayers.Text & ";",
             "kickduplicate = " & IKickDuplicates.IsChecked & ";",
-            "upnp = " & IUpnp.IsChecked & ";",
+            "upnp = " & IUPNP.IsChecked & ";",
             "allowedFilePatching = " & IAllowFilePatching.Text & ";",
             "verifySignatures = " & IVerifySignatures.Text & ";",
             "disableVoN = " & von & ";",
@@ -915,7 +929,7 @@ Class ServerProfile
         profile.LocalClients = ILocalClients.Text
         profile.NoOfHeadlessClients = INoOfHeadlessClients.Value
         profile.Loopback = ILoopback.IsChecked
-        profile.Upnp = IUpnp.IsChecked
+        profile.Upnp = IUPNP.IsChecked
         profile.Netlog = INetlog.IsChecked
         'profile.AutoRestartEnabled = IAutoRestartEnabled.IsChecked
         'profile.DailyRestartAEnabled = IDailyRestartAEnabled.IsChecked
@@ -1157,6 +1171,17 @@ Class ServerProfile
     End Sub
     Private Sub ErrorToSend_TextChanged(sender As Object, e As TextChangedEventArgs) Handles IMinErrorToSend.TextChanged, IMinErrorToSendNear.TextChanged
         sender.Text = Replace(sender.Text, ",", ".")
+    End Sub
 
+    Private Sub UpdateProfileModCounts()
+        Dim profile = My.Settings.Servers.ServerProfiles.Find(Function(p) p.SafeName = _safeName)
+
+        IServerModsLabel.Content = "Server Only Mods (" & IServerModsList.SelectedItems.Count & ")"
+        IClientModsLabel.Content = "Player Required Mods (" & IClientModsList.SelectedItems.Count & ")"
+        IHeadlessModsLabel.Content = "Headless Client Mods (" & IHeadlessModsList.SelectedItems.Count & ")"
+    End Sub
+
+    Private Sub IModsLists_ItemSelectionChanged(sender As Object, e As ItemSelectionChangedEventArgs) Handles IServerModsList.ItemSelectionChanged, IClientModsList.ItemSelectionChanged, IHeadlessModsList.ItemSelectionChanged
+        UpdateProfileModCounts()
     End Sub
 End Class
