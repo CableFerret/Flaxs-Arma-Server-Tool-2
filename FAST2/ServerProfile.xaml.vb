@@ -860,7 +860,7 @@ Class ServerProfile
             vbTab & vbTab & vbTab & "scoreTable = " & IScoreTable.IsChecked & ";",
             vbTab & vbTab & vbTab & "deathMessages = " & IKilledBy.IsChecked & ";",
             vbTab & vbTab & vbTab & "vonID = " & IVonId.IsChecked & ";",
-            vbTab & vbTab & vbTab & "mapContentFriendly	 = " & IMapContentFriendly.IsChecked & ";",
+            vbTab & vbTab & vbTab & "mapContentFriendly = " & IMapContentFriendly.IsChecked & ";",
             vbTab & vbTab & vbTab & "mapContentEnemy = " & IMapContentEnemy.IsChecked & ";",
             vbTab & vbTab & vbTab & "mapContentMines = " & IMapContentMines.IsChecked & ";",
             vbTab & vbTab & vbTab & "autoReport = " & IAutoReporting.IsChecked & ";",
