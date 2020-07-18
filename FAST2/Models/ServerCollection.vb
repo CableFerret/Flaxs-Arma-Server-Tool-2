@@ -162,9 +162,9 @@ Namespace Models
         Public Property CameraShake As Boolean = False
         Public Property VisualAids As Boolean = False
         'Public Property ExtendedMapContent As Boolean = False
-        Public Property IMapContentFriendly As Boolean = False
-        Public Property IMapContentEnemy As Boolean = False
-        Public Property IMapContentMines As Boolean = False
+        Public Property MapContentFriendly As Boolean = False
+        Public Property MapContentEnemy As Boolean = False
+        Public Property MapContentMines As Boolean = False
         Public Property Commands As String = "Never"
         Public Property VonId As Boolean = False
         Public Property KilledBy As Boolean = False

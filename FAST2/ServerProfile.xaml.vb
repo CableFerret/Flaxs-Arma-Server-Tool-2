@@ -972,9 +972,9 @@ Class ServerProfile
         profile.StaminaBar = IStaminaBar.IsChecked
         profile.CameraShake = ICameraShake.IsChecked
         profile.VisualAids = IVisualAids.IsChecked
-        profile.IMapContentFriendly = IMapContentFriendly.IsChecked
-        profile.IMapContentEnemy = IMapContentEnemy.IsChecked
-        profile.IMapContentMines = IMapContentMines.IsChecked
+        profile.MapContentFriendly = IMapContentFriendly.IsChecked
+        profile.MapContentEnemy = IMapContentEnemy.IsChecked
+        profile.MapContentMines = IMapContentMines.IsChecked
         profile.Commands = ICommands.Text
         profile.VonId = IVonId.IsChecked
         profile.KilledBy = IKilledBy.IsChecked
